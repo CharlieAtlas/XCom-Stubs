@@ -3,53 +3,44 @@ class XGMissionControlUI extends XGScreenMgr
     notplaceable
     hidecategories(Navigation)
     implements(IFCRequestInterface)
-	DependsOn(XGFundingCouncil);
+	dependsOn(XGFundingCouncil)
+	dependson(XGSituationRoomUI);
+//complete stub
 
-struct TMCMission
+enum EMCView
 {
-    var TImage imgOption;
-    var TButtonText txtOption;
-    var Color clrOption;
+    eMCView_MainMenu,
+    eMCView_Alert,
+    eMCView_Abduction,
+    eMCView_FCRequest,
+    eMCView_ChooseShip,
+    eMCView_MAX
 };
-
-struct TMCAlert
+struct TMCHeader
 {
-    var int iAlertType;
     var TText txtTitle;
-    var array<TText> arrText;
-    var array<TLabeledText> arrLabeledText;
-    var TMenu mnuReplies;
-    var TImage imgAlert;
-    var TImage imgAlert2;
-    var TImage imgAlert3;
-    var int iNumber;
-
-    structdefaultproperties
-    {
-        iAlertType=0
-        txtTitle=(StrValue="",iState=0)
-        arrText=none
-        arrLabeledText=none
-        mnuReplies=(strLabel="",arrOptions=none,bTakesNoInput=false)
-        imgAlert=(iImage=0,strLabel="",iState=0,strPath="")
-        imgAlert2=(iImage=0,strLabel="",iState=0,strPath="")
-        imgAlert3=(iImage=0,strLabel="",iState=0,strPath="")
-        iNumber=0
-    }
 };
-
+struct TMCCounter
+{
+    var TText txtTitle;
+    var TLabeledText txtTotal;
+    var TLabeledText txtAbductions;
+    var TLabeledText txtTerror;
+    var TLabeledText txtUFOCrash;
+    var TLabeledText txtUFOLanded;
+    var TLabeledText txtAlienBase;
+};
+struct TMCClock
+{
+    var int iMinutes;
+    var TText txtDateTime;
+    var TText txtTimeScale;
+};
 struct TMCMission
 {
     var TImage imgOption;
     var TButtonText txtOption;
     var Color clrOption;
-
-    structdefaultproperties
-    {
-        imgOption=(iImage=0,strLabel="",iState=0,strPath="")
-        txtOption=(StrValue="",iState=0,iButton=0)
-        clrOption=(R=0,G=0,B=0,A=0)
-    }
 };
 
 struct TMCMenu
@@ -79,8 +70,34 @@ struct TMCEventMenu
     var TText txtEventsLabel;
     var int iHighlight;
 };
-
-
+struct TMCNotice
+{
+    var TImage imgNotice;
+    var TText txtNotice;
+    var float fTimer;
+};
+struct TMCSighting
+{
+    var TText txtLocation;
+    var TText txtTimestamp;
+    var TImage imgSighting;
+};
+struct TMCAbduct
+{
+    var TMenu mnuSites;
+    var array<XGMission> arrAbductions;
+    var TText txtCountryName;
+    var TText txtPanicLabel;
+    var int iPanicLevel;
+    var int iMissionDiffLevel;
+    var TLabeledText txtMissionDifficulty;
+    var TLabeledText txtReward;
+    var TLabeledText txtFundingIncrease;
+    var TLabeledText txtCurrFunding;
+    var TImage imgBG;
+    var int iSelected;
+    var int iPrevSelection;
+};
 struct TMCAlert
 {
     var int iAlertType;
@@ -94,14 +111,25 @@ struct TMCAlert
     var int iNumber;
 };
 
-var TMCMenu m_kMenu;
+var TMCHeader m_kHeader;
+var TMCClock m_kClock;
+var TButtonBar m_kButtonBar;
+var TMCCounter m_kCounter;
 var TMCAlert m_kCurrentAlert;
+var TMCMenu m_kMenu;
+var TMCEventMenu m_kEvents;
+var TMCAbduct m_kAbductInfo;
 var array<int> m_arrMenuUFOs;
 var array<int> m_arrMenuMissions;
+var TButtonText m_btxtScan;
+var TButtonText m_btxtSatellites;
+var array<TMCNotice> m_arrNotices;
+var array<TMCSighting> m_arrSightings;
 var int m_iEvent;
 var float m_fFirstTimeTimer;
 var int m_iLastUpdateDay;
 var bool m_bNarrFilteringAbduction;
+var TSitRequest m_kRequest;
 var int m_intMissionType;
 var int m_eCountryFromExaltSelection;
 var const localized string m_strLabelDays;
@@ -261,6 +289,8 @@ var const localized string m_strLabelAugmentTitle;
 var const localized string m_strLabelAugmentBody;
 var const localized string m_strLabelGotoBuildMec;
 var const localized string m_strGeneModCompleteNotify;
+var const localized string m_arrExaltReasons[EExaltCellExposeReason];
+var const localized string m_strLabelExaltActivitySubtitles[EExaltCellExposeReason];
 var const localized string m_strLabelItemsRequested;
 var const localized string m_strLabelExaltRaidCountryFailSubtitle;
 var const localized string m_strLabelExaltRaidCountryFailLeft;
@@ -268,26 +298,8 @@ var const localized string m_strLabelExaltRaidContinentFailTitle;
 var const localized string m_strLabelExaltRaidContinentFailSubtitle;
 var const localized string m_strLabelExaltRaidContinentFailDesc;
 var const localized string m_strLabelExaltRaidContinentFailPanic;
-
-function OnAlertInput(int iOption) {}
-
-function UpdateView() {}
-function UpdateEvents(){}
-function UpdateAlert() {}
-function UpdateHeader(){}
-function UpdateClock(){}
-function UpdateMissions() {}
-function UpdateMissionCounter(){}
-function UpdateScan(){}
-function UpdateAbduction() {}
-function UpdateSelectionHighlight(){}
-function UpdateRequest() {}
-function UpdateNotices(float fDeltaT){}
-function UpdateButtonHelp(){}
-function UpdateCamera(){}
-function ShowUFOInterceptAlert(int iUFOindex) {}
-function Init(int iView) {}
-function AddNotice(EGeoscapeAlert eNotice, optional int iData1, optional int iData2, optional int iData3) {}
+function Init(int iView){}
+function UpdateView(){}
 function FacilityNarrative(EFacilityType eNewFacility){}
 function OnIncreaseTimeScale(){}
 function OnDecreaseTimeScale(){}
@@ -296,25 +308,38 @@ function OnCancelScan(){}
 function OnMissionInput(){}
 function bool CanActivateMission(){}
 function int GetMissionType(){}
+function ShowUFOInterceptAlert(int iUFOindex){}
 function OnChooseEvent(){}
 function MissionDown(){}
 function MissionUp(){}
 function MissionSetSelected(int iIndex){}
 function ExitMC(){}
+function UpdateHeader();
+function UpdateClock(){}
 function bool DrawCounter(){}
 function MissionNotify(){}
+function UpdateMissionCounter(){}
+function UpdateScan(){}
+function UpdateSelectionHighlight(){}
+function UpdateMissions(){}
 function int GetNumMissionOptions(){}
+function UpdateEvents(){}
 static function int SortEvents(THQEvent e1, THQEvent e2){}
 function BuildEventOptions(){}
+function UpdateNotices(float fDeltaT){}
+function AddNotice(EGeoscapeAlert eNotice, optional int iData1, optional int iData2, optional int iData3){}
+function UpdateButtonHelp(){}
 simulated function OnReceiveFocus(){}
 function ChooseMusic(){}
 simulated function OnLoseFocus(){}
 simulated function JumpToFacility(XGFacility kFacility, optional int iView, optional name NewState){}
 event Tick(float fDeltaT){}
+function UpdateCamera(){}
 function ProcessAlert(){}
 function ProcessFCRequest(){}
 function string RewardToString(EFCRewardType eReward, int iAmount){}
 simulated function GetRequestData(out TFCRequest kRequestRef){}
+function UpdateRequest(){}
 function bool HasActiveAlert(){}
 function NotifyTopAlert(){}
 function bool CheckForInterrupt(){}
@@ -324,5 +349,8 @@ function OnAbductionOption(int iOption){}
 simulated function bool OnAcceptRequest(){}
 simulated function bool OnCancelRequest(){}
 function bool OnFCRequest(bool bAccepted, optional bool immediatelyTurnIn){}
+function UpdateAbduction(){}
 function TLabeledText BuildRewardString(XGMission kMission){}
+function OnAlertInput(int iOption){}
 function PostOverseerMatinee(){}
+function UpdateAlert(){}

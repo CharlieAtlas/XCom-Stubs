@@ -5,18 +5,6 @@ class XGInterceptionEngagement extends XGStrategyActor
 
 const cfMovementPerSecond = -5.0;
 
-struct Combat
-{
-    var array<CombatExchange> m_aInterceptorExchanges;
-    var array<CombatExchange> m_aUFOExchanges;
-
-    structdefaultproperties
-    {
-        m_aInterceptorExchanges=none
-        m_aUFOExchanges=none
-    }
-}; 
-
 struct CombatExchange
 {
     var int iSourceShip;
@@ -26,15 +14,13 @@ struct CombatExchange
     var int iDamage;
     var float fTime;
 
-    structdefaultproperties
-    {
-        iSourceShip=0
-        iWeapon=0
-        iTargetShip=0
-        bHit=false
-        iDamage=0
-        fTime=0.0
-    }
+};
+
+struct Combat
+{
+    var array<CombatExchange> m_aInterceptorExchanges;
+    var array<CombatExchange> m_aUFOExchanges;
+
 };
 
 var XGInterception m_kInterception;
@@ -89,7 +75,3 @@ function Combat GetCombat(){}
 function UpdateEngagementResult(float fElapsedTime){}
 function SetBoostAdjustedTimeOffset(float fPlaybackTimeElapsed){}
 
-
-DefaultProperties
-{
-}

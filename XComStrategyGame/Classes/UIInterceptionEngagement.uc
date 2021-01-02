@@ -135,7 +135,7 @@ simulated function ActivateAimAbility(){}
 simulated function ActivateTrackAbility(){}
 simulated event Tick(float fDeltaT){}
 simulated function Playback(float fDeltaT){}
-simulated function int GetWeaponType(XGInterceptionEngagement.CombatExchange kCombatExchange){}
+simulated function int GetWeaponType(CombatExchange kCombatExchange){}
 simulated function UpdateEnemyEscapeTimer(float fDeltaT){}
 simulated function ShowResultScreen(){}
 final simulated function SetConsumablesState(optional int stateOverride){}
@@ -165,35 +165,3 @@ event Destroyed(){}
 function UnlockItems(array<TItemUnlock> arrUnlocks){}
 function UnlockItem(TItemUnlock kUnlock){}
 
-
-DefaultProperties
-{
-	m_strEstablishingLinkLabel="ESTABLISHING LINK..."
-    m_strPlayerDamageLabel="DAMAGE"
-    m_strLeaveReportButtonLabel="LEAVE REPORT"
-    m_strAbortMission="ABORT"
-    m_strAbortingMission="ABORTING..."
-    m_strAbortedMission="ABORTED"
-    m_strDodgeAbility="DODGE"
-    m_strAimAbility="AIM"
-    m_strTrackAbility="TRACK"
-    m_strTrackingText="TRACKING"
-    m_strEscapeTimerTitle="CONTACT LOSS IN:"
-    m_strResult_UFOCrashed="<Bullet/> <XGParam:StrValue0/> shot down the target UFO.\\n<Bullet/> Surveillance indicates alien crew moving at the crash site."
-    m_strResult_UFODestroyed="<Bullet/> <XGParam:StrValue0/> destroyed the target UFO.\\n<Bullet/> UFO exploded in flight. Surveillance indicates neither survivors nor salvage."
-    m_strResult_UFOEscaped="<Bullet/> <XGParam:StrValue0/> was unable to sustain pursuit of the target UFO."
-    m_strResult_UFODisengaged="<Bullet/> <XGParam:StrValue0/> broke off engagement with target UFO."
-    m_strReport_NoDamage="<Bullet/> <XGParam:StrValue0/> took no damage during the encounter."
-    m_strReport_LightDamage="<Bullet/> <XGParam:StrValue0/> sustained light damage in the encounter."
-    m_strReport_HeavyDamage="<Bullet/> <XGParam:StrValue0/> sustained heavy damage in the encounter."
-    m_strReport_SevereDamage="<Bullet/> <XGParam:StrValue0/> sustained severe damage in the encounter."
-    m_strReport_ShotDown="<Bullet/> <XGParam:StrValue0/> was shot down."
-    m_strReport_Title="Interception Engagement"
-    m_strReport_Subtitle="STATUS REPORT"
-    m_strTimeSufixSymbol="s"
-    m_strAbilityDescriptions[0]="AIM: Guarantees next 2 shots will hit the target."
-    m_strAbilityDescriptions[1]="DODGE: Causes pilot to evade next 2 enemy hits."
-    m_strAbilityDescriptions[2]="TRACK: Prevents enemy escape for 5 seconds.\\nReduces approach time for short range weapons."
-    m_strCameraTag="MissionControl_UIDisplayCam_Interception"
-    DisplayTag=UIDisplay_Interception
-}

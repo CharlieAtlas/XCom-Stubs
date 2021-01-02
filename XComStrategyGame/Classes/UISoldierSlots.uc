@@ -1,4 +1,5 @@
 class UISoldierSlots extends UI_FxsShellScreen;
+//complete stub
 
 enum UISlotOptionCategories
 {
