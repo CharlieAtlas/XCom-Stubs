@@ -2,6 +2,7 @@ class XGTechTree extends XGStrategyActor
     config(GameData)
     notplaceable
     hidecategories(Navigation);
+//complete stub
 
 var array<TTech> m_arrTechs;
 var array<TFoundryTech> m_arrFoundryTechs;
